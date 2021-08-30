@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>Product_html_attribute</code>
+	<name>Product HTML Attribute</name>
+	<version>3.0</version>
+	<author>REDS</author>
+	<link>https://www.prai.com.br/</link>
+
+	<file path="admin/view/template/catalog/product_form.twig">
+		<operation>
+			<search><![CDATA[
+				var attribute_row = {{ attribute_row }};
+			]]></search>
+			<add position="before"><![CDATA[
+				$('textarea[name^="product_attribute["]').each(function(i,e) {
+					$(this).summernote();
+				});
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+				$('#attribute tbody').append(html);
+			]]></search>
+			<add position="after"><![CDATA[
+				$('textarea[name^="product_attribute[' + attribute_row + ']["]').each(function(i,e) {
+					$(this).summernote();
+				});
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/model/catalog/product.php">
+		<operation>
+			<search><![CDATA[=> $product_attribute['text']]]></search>
+			<add position="after"><![CDATA[
+				,
+				'text' => html_entity_decode($product_attribute['text'], ENT_QUOTES, 'UTF-8')
+			]]></add>
+		</operation>
+	</file>
+</modification>
